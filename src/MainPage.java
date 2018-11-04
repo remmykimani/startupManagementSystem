@@ -27,6 +27,7 @@ public class MainPage extends javax.swing.JFrame {
     {
         txtManageUserName.setText("");
         
+        
     }
     public void fillcomboxStartupID()
     {
@@ -39,8 +40,7 @@ public class MainPage extends javax.swing.JFrame {
             while(rs.next())
             {
                 comboxStartupID.addItem(Integer.toString(rs.getInt("Startup_ID")));
-            }          
-            
+            }
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, "QUERY ERROR in filling comboxStartupID "+e.getMessage());
