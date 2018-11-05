@@ -1,12 +1,15 @@
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class MainPage extends javax.swing.JFrame {
 
    
-    
+    //TESTING PULL 12345678 PULL CHECK
     public MainPage() {
         initComponents();
          executeFunctions();
@@ -65,6 +68,35 @@ public class MainPage extends javax.swing.JFrame {
         }
     }
     
+    public void updateManageUser()
+    {
+        try
+        {
+            QueryProcess qp2=new QueryProcess();  
+        String UserID=lblManageUserID.getText().trim();
+        String UserName=txtManageUserName.getText().trim();
+        String startupID=comboxStartupID.getSelectedItem().toString();
+        String UserPass=txtManageUserPass.getText().trim();        
+        String query="UPDATE `user` SET `userID`='"+UserID+"',`userName`='"+UserName+"',`StartupID`='"+startupID+"',`password`='"+UserPass+"' WHERE Ranger_ID="+UserID;
+        qp2.upQuery(query);
+        initializeManageUsers();
+        lblUserManageStatus.setText("UPDATE SUCESSFUL");
+       lblUserManageStatus.setForeground(new Color(12, 140, 1));
+        
+        DefaultTableModel model=(DefaultTableModel)tblManageUser.getModel();
+        model.setRowCount(0);
+        fillUserTable();
+        
+        }catch(Exception e)
+                {
+                    lblUserManageStatus.setText("UPDATE FAILED!!");
+        lblUserManageStatus.setForeground(new Color(109, 1, 1));
+            System.out.println("UPDATE ERROR: "+e.getMessage());
+            JOptionPane.showMessageDialog(null, "QUERY ERROR: "+e.getMessage());                    
+                }
+        
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -86,11 +118,12 @@ public class MainPage extends javax.swing.JFrame {
         radioAdmin = new javax.swing.JRadioButton();
         radioUser = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblManageUser = new javax.swing.JTable();
         btnManageUsersNew = new javax.swing.JButton();
         btnManageUsersUpdate = new javax.swing.JButton();
         btnManageUsersSubmit = new javax.swing.JButton();
         btnManageUsersDelete = new javax.swing.JButton();
+        lblUserManageStatus = new javax.swing.JLabel();
         userManageStartup = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -173,7 +206,7 @@ public class MainPage extends javax.swing.JFrame {
 
         radioUser.setText("USER");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblManageUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -181,7 +214,7 @@ public class MainPage extends javax.swing.JFrame {
                 "USER ID", "NAME", "STARTUP", "AUTHORITY"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblManageUser);
 
         btnManageUsersNew.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersNew.setText("NEW");
@@ -193,20 +226,44 @@ public class MainPage extends javax.swing.JFrame {
 
         btnManageUsersUpdate.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersUpdate.setText("UPDATE");
+        btnManageUsersUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageUsersUpdateActionPerformed(evt);
+            }
+        });
 
         btnManageUsersSubmit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersSubmit.setForeground(new java.awt.Color(51, 153, 0));
         btnManageUsersSubmit.setText("SUBMIT");
+        btnManageUsersSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageUsersSubmitActionPerformed(evt);
+            }
+        });
 
         btnManageUsersDelete.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersDelete.setForeground(new java.awt.Color(255, 0, 51));
         btnManageUsersDelete.setText("DELETE");
+
+        lblUserManageStatus.setText("Awaiting Action by User");
 
         javax.swing.GroupLayout admManageUsersLayout = new javax.swing.GroupLayout(admManageUsers);
         admManageUsers.setLayout(admManageUsersLayout);
         admManageUsersLayout.setHorizontalGroup(
             admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(admManageUsersLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnManageUsersDelete)
+                .addGap(10, 10, 10)
+                .addComponent(btnManageUsersNew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnManageUsersUpdate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnManageUsersSubmit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblUserManageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(96, 96, 96))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, admManageUsersLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
@@ -225,16 +282,6 @@ public class MainPage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
-            .addGroup(admManageUsersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnManageUsersDelete)
-                .addGap(10, 10, 10)
-                .addComponent(btnManageUsersNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnManageUsersUpdate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnManageUsersSubmit)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         admManageUsersLayout.setVerticalGroup(
             admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,12 +313,17 @@ public class MainPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(radioUser)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnManageUsersNew)
-                    .addComponent(btnManageUsersUpdate)
-                    .addComponent(btnManageUsersSubmit)
-                    .addComponent(btnManageUsersDelete))
-                .addGap(37, 37, 37))
+                .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, admManageUsersLayout.createSequentialGroup()
+                        .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnManageUsersNew)
+                            .addComponent(btnManageUsersUpdate)
+                            .addComponent(btnManageUsersSubmit)
+                            .addComponent(btnManageUsersDelete))
+                        .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, admManageUsersLayout.createSequentialGroup()
+                        .addComponent(lblUserManageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         functionTab.addTab("Manage User", admManageUsers);
@@ -455,6 +507,14 @@ public class MainPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnManageStartupUpdateActionPerformed
 
+    private void btnManageUsersSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersSubmitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnManageUsersSubmitActionPerformed
+
+    private void btnManageUsersUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersUpdateActionPerformed
+        updateManageUser();
+    }//GEN-LAST:event_btnManageUsersUpdateActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -520,13 +580,14 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblManageStartupID;
     private javax.swing.JLabel lblManageUserID;
+    private javax.swing.JLabel lblUserManageStatus;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JRadioButton radioAdmin;
     private javax.swing.ButtonGroup radioAuth;
     private javax.swing.JRadioButton radioUser;
+    private javax.swing.JTable tblManageUser;
     private javax.swing.JTable tblStartupManage;
     private javax.swing.JTextField txtManageFounder;
     private javax.swing.JTextField txtManageStartupContact;
