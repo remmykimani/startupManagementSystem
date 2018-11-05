@@ -1,5 +1,6 @@
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.*;
 
 public class MainPage extends javax.swing.JFrame {
@@ -25,7 +26,24 @@ public class MainPage extends javax.swing.JFrame {
     }
     public void initializeManageUsers()
     {
+        QueryProcess rangPanelQry =new QueryProcess();
+       ResultSet vrs= rangPanelQry.exQuery("SELECT MAX(UserID)FROM users");
+       try
+       {
+       while (vrs.next())
+      {
+          lblManageUserID.setText(Integer.toString(vrs.getInt("MAX(UserID)")+1));
+           txtManageUserName.setText("");
+           txtManageUserPass.setText("");
+                    
+      }
+       }catch(SQLException e)
+       {
+           System.out.println("SQL ERROR:: "+e.getMessage());
+       }
+       
         txtManageUserName.setText("");
+        
         
         
     }
@@ -61,7 +79,7 @@ public class MainPage extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lblManageUserID = new javax.swing.JLabel();
         txtManageUserName = new javax.swing.JTextField();
         comboxStartupID = new javax.swing.JComboBox<>();
         txtManageUserPass = new javax.swing.JPasswordField();
@@ -142,8 +160,8 @@ public class MainPage extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel5.setText("AUTH:");
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("N/A");
+        lblManageUserID.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblManageUserID.setText("N/A");
 
         txtManageUserName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,7 +218,7 @@ public class MainPage extends javax.swing.JFrame {
                 .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comboxStartupID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtManageUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblManageUserID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtManageUserPass, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(radioAdmin)
                     .addComponent(radioUser))
@@ -229,7 +247,7 @@ public class MainPage extends javax.swing.JFrame {
                             .addGroup(admManageUsersLayout.createSequentialGroup()
                                 .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel1)
-                                    .addComponent(jLabel6))
+                                    .addComponent(lblManageUserID))
                                 .addGap(52, 52, 52)
                                 .addGroup(admManageUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel2)
@@ -426,7 +444,7 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_txtManageUserNameActionPerformed
 
     private void btnManageUsersNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersNewActionPerformed
-        // TODO add your handling code here:
+        initializeManageUsers();
     }//GEN-LAST:event_btnManageUsersNewActionPerformed
 
     private void btnManageStartupNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageStartupNewActionPerformed
@@ -497,7 +515,6 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -505,6 +522,7 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblManageStartupID;
+    private javax.swing.JLabel lblManageUserID;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JRadioButton radioAdmin;
     private javax.swing.ButtonGroup radioAuth;
