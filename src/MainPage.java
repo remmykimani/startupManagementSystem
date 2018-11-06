@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 public class MainPage extends javax.swing.JFrame {
 
@@ -18,17 +19,17 @@ public class MainPage extends javax.swing.JFrame {
 
     public void executeFunctions()
     {
-        admRadioAuthGroup();
+        //admRadioAuthGroup();
         fillcomboxStartupID();
         fillTblUserTable();
     }
-    public void admRadioAuthGroup()
-    {
-        ButtonGroup arg =new ButtonGroup();
-        arg.add(radioUser);
-        arg.add(radioAdmin);
-        
-    }
+//    public void admRadioAuthGroup()
+//    {
+//        ButtonGroup arg =new ButtonGroup();
+//        arg.add(radioUser);
+//        arg.add(radioAdmin);
+//        
+//    }
     public void initializeManageUsers()
     {
         QueryProcess rangPanelQry =new QueryProcess();
@@ -40,6 +41,7 @@ public class MainPage extends javax.swing.JFrame {
           lblManageUserID.setText(Integer.toString(vrs.getInt("MAX(UserID)")+1));
            txtManageUserName.setText("");
            txtManageUserPass.setText("");
+           radioUser.isSelected();
                     
       }
        }catch(SQLException e)
@@ -152,35 +154,59 @@ public class MainPage extends javax.swing.JFrame {
          String UserID=lblManageUserID.getText().trim();
         String UserName=txtManageUserName.getText().trim();
         String startupID=comboxStartupID.getSelectedItem().toString();
-        ButtonGroup sbtn= admRadioAuthGroup();
+        
+        radioAdmin.setActionCommand("1");
+        radioUser.setActionCommand("0");
+        int authority=Integer.parseInt(userManageAuthGroup.getSelection().getActionCommand());
         String UserPass=txtManageUserPass.getText().trim();
-        
-        String query="INSERT INTO `user` (`userID`, `userName`, `StartupID`, `Authority`, `password`) VALUES (''"+UserID+"', '"+UserName+"', '"+startupID+"', '"+Ranpass+"')";
+        String query="INSERT INTO `user` (`userID`, `userName`, `StartupID`, `Authority`, `password`) VALUES ('"+UserID+"', '"+UserName+"', '"+startupID+"', '"+authority+"', '"+UserPass+"')";
         qp2.upQuery(query);
-        initializeRangerForm();
-        lblSubimitionStatus.setText("SUBMITTION SUCESSFUL");
-        lblSubimitionStatus.setForeground(new Color(12, 140, 1));
+        initializeManageUsers();
+        lblUserManageStatus.setText("SUBMITTION SUCESSFUL");
+        lblUserManageStatus.setForeground(new Color(12, 140, 1));
         
-        DefaultTableModel model=(DefaultTableModel)tblRangerDetails.getModel();
+        DefaultTableModel model=(DefaultTableModel)tblManageUser.getModel();
         model.setRowCount(0);
-        fillRangerTable();
+       fillTblUserTable();
         
         }catch(Exception e)
                 {
-                    lblSubimitionStatus.setText("SUBMITTION FAILED!!");
-        lblSubimitionStatus.setForeground(new Color(109, 1, 1));
+                    lblUserManageStatus.setText("SUBMITTION FAILED!!");
+        lblUserManageStatus.setForeground(new Color(109, 1, 1));
             System.out.println("UPDATE ERROR: "+e.getMessage());
             JOptionPane.showMessageDialog(null, "QUERY ERROR: "+e.getMessage());                    
                 }
     }
-
+public void userDelete()
+{
+    
+    QueryProcess deleteVolQry =new QueryProcess();
+      
+       try
+       {
+           JOptionPane.showMessageDialog(null, "Are you Sure You Want to Delete Selected Row? ");
+           int i=tblManageUser.getSelectedRow();
+        TableModel delModel=tblManageUser.getModel();
+        String delUserID=(delModel.getValueAt(i,0).toString());
+           deleteVolQry.upQuery("DELETE FROM user WHERE UserID="+delUserID);
+           JOptionPane.showMessageDialog(null, "Delete Sucessful ");
+           DefaultTableModel model=(DefaultTableModel)tblManageUser.getModel();
+        model.setRowCount(0);
+        fillTblUserTable();
+       
+       }catch(Exception e)
+       {
+           JOptionPane.showMessageDialog(null, "Deletion FAILED! ");
+           System.out.println("SQL DELETE ERROR:: "+e.getMessage());
+       }
+}
     
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        radioAuth = new javax.swing.ButtonGroup();
+        userManageAuthGroup = new javax.swing.ButtonGroup();
         menuPanel = new javax.swing.JPanel();
         infoPanel = new javax.swing.JPanel();
         functionTab = new javax.swing.JTabbedPane();
@@ -281,8 +307,10 @@ public class MainPage extends javax.swing.JFrame {
             }
         });
 
+        userManageAuthGroup.add(radioAdmin);
         radioAdmin.setText("ADMIN");
 
+        userManageAuthGroup.add(radioUser);
         radioUser.setText("USER");
 
         tblManageUser.setModel(new javax.swing.table.DefaultTableModel(
@@ -323,6 +351,11 @@ public class MainPage extends javax.swing.JFrame {
         btnManageUsersDelete.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersDelete.setForeground(new java.awt.Color(255, 0, 51));
         btnManageUsersDelete.setText("DELETE");
+        btnManageUsersDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageUsersDeleteActionPerformed(evt);
+            }
+        });
 
         lblUserManageStatus.setText("Awaiting Action by User");
 
@@ -587,12 +620,16 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnManageStartupUpdateActionPerformed
 
     private void btnManageUsersSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersSubmitActionPerformed
-       
+       userManageBtnSubmit();
     }//GEN-LAST:event_btnManageUsersSubmitActionPerformed
 
     private void btnManageUsersUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersUpdateActionPerformed
         updateManageUser();
     }//GEN-LAST:event_btnManageUsersUpdateActionPerformed
+
+    private void btnManageUsersDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersDeleteActionPerformed
+        userDelete();
+    }//GEN-LAST:event_btnManageUsersDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -664,7 +701,6 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JLabel lblUserManageStatus;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JRadioButton radioAdmin;
-    private javax.swing.ButtonGroup radioAuth;
     private javax.swing.JRadioButton radioUser;
     private javax.swing.JTable tblManageUser;
     private javax.swing.JTable tblStartupManage;
@@ -675,6 +711,7 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JTextField txtManageStartupTel;
     private javax.swing.JTextField txtManageUserName;
     private javax.swing.JPasswordField txtManageUserPass;
+    private javax.swing.ButtonGroup userManageAuthGroup;
     private javax.swing.JPanel userManageStartup;
     // End of variables declaration//GEN-END:variables
 }
