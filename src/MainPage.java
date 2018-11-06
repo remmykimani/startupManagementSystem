@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,6 +20,7 @@ public class MainPage extends javax.swing.JFrame {
     {
         admRadioAuthGroup();
         fillcomboxStartupID();
+        fillTblUserTable();
     }
     public void admRadioAuthGroup()
     {
@@ -30,7 +32,7 @@ public class MainPage extends javax.swing.JFrame {
     public void initializeManageUsers()
     {
         QueryProcess rangPanelQry =new QueryProcess();
-       ResultSet vrs= rangPanelQry.exQuery("SELECT MAX(UserID)FROM users");
+       ResultSet vrs= rangPanelQry.exQuery("SELECT MAX(UserID)FROM user");
        try
        {
        while (vrs.next())
@@ -85,7 +87,7 @@ public class MainPage extends javax.swing.JFrame {
         
         DefaultTableModel model=(DefaultTableModel)tblManageUser.getModel();
         model.setRowCount(0);
-        fillUserTable();
+        fillTblUserTable();
         
         }catch(Exception e)
                 {
@@ -94,8 +96,85 @@ public class MainPage extends javax.swing.JFrame {
             System.out.println("UPDATE ERROR: "+e.getMessage());
             JOptionPane.showMessageDialog(null, "QUERY ERROR: "+e.getMessage());                    
                 }
+    }
+    
+     public ArrayList<Users>usList()
+    {
+        ArrayList <Users> volsList=new ArrayList<>();
+        try
+        {
+            QueryProcess qry4=new QueryProcess();
+            ResultSet rs;
+            rs=qry4.exQuery("SELECT * FROM `user`");
+           Users user;
+            
+            while(rs.next())
+            {
+                user=new Users(rs.getInt("userID"),rs.getString("userName"),rs.getInt("StartupID"),rs.getInt("Authority"));
+                volsList.add(user);
+            }          
+            
+        }catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "QUERY ERROR: "+e.getMessage());
+        }
+        return volsList;
         
     }
+    public void fillTblUserTable()
+    {
+         ArrayList<Users> userList= usList();
+        DefaultTableModel model=(DefaultTableModel)tblManageUser.getModel();
+        Object []row=new Object[4];
+        
+        for (int i=0;i<userList.size();i++)
+        {
+            row[0]=userList.get(i).getUserId();
+            row[1]=userList.get(i).getUserNane();
+            row[2]=userList.get(i).getStartupID();
+            if(userList.get(i).getAuthority()==0)
+            {
+                row[3]="USER";
+            }
+            else
+            {
+                 row[3]="ADMIN";
+            }
+            model.addRow(row);
+        }
+    }
+    
+    public void userManageBtnSubmit()
+    {
+         try
+        {
+            QueryProcess qp2=new QueryProcess();  
+         String UserID=lblManageUserID.getText().trim();
+        String UserName=txtManageUserName.getText().trim();
+        String startupID=comboxStartupID.getSelectedItem().toString();
+        ButtonGroup sbtn= admRadioAuthGroup();
+        String UserPass=txtManageUserPass.getText().trim();
+        
+        String query="INSERT INTO `user` (`userID`, `userName`, `StartupID`, `Authority`, `password`) VALUES (''"+UserID+"', '"+UserName+"', '"+startupID+"', '"+Ranpass+"')";
+        qp2.upQuery(query);
+        initializeRangerForm();
+        lblSubimitionStatus.setText("SUBMITTION SUCESSFUL");
+        lblSubimitionStatus.setForeground(new Color(12, 140, 1));
+        
+        DefaultTableModel model=(DefaultTableModel)tblRangerDetails.getModel();
+        model.setRowCount(0);
+        fillRangerTable();
+        
+        }catch(Exception e)
+                {
+                    lblSubimitionStatus.setText("SUBMITTION FAILED!!");
+        lblSubimitionStatus.setForeground(new Color(109, 1, 1));
+            System.out.println("UPDATE ERROR: "+e.getMessage());
+            JOptionPane.showMessageDialog(null, "QUERY ERROR: "+e.getMessage());                    
+                }
+    }
+
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -508,7 +587,7 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnManageStartupUpdateActionPerformed
 
     private void btnManageUsersSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersSubmitActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_btnManageUsersSubmitActionPerformed
 
     private void btnManageUsersUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUsersUpdateActionPerformed
