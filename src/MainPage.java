@@ -19,17 +19,10 @@ public class MainPage extends javax.swing.JFrame {
 
     public void executeFunctions()
     {
-        //admRadioAuthGroup();
         fillcomboxStartupID();
         fillTblUserTable();
     }
-//    public void admRadioAuthGroup()
-//    {
-//        ButtonGroup arg =new ButtonGroup();
-//        arg.add(radioUser);
-//        arg.add(radioAdmin);
-//        
-//    }
+
     public void initializeManageUsers()
     {
         QueryProcess rangPanelQry =new QueryProcess();
@@ -42,6 +35,7 @@ public class MainPage extends javax.swing.JFrame {
            txtManageUserName.setText("");
            txtManageUserPass.setText("");
            radioUser.isSelected();
+           btnManageUsersSubmit.setEnabled(true);
                     
       }
        }catch(SQLException e)
@@ -51,9 +45,28 @@ public class MainPage extends javax.swing.JFrame {
        
         txtManageUserName.setText("");
         
-        
+    }
+    public void initializeManageStartup()
+    {
         
     }
+    public void updateManageStartup()
+    {
+        
+    }
+    public void fillTblStartupTable()
+    {
+        
+    }
+     public void startupManageBtnSubmit()
+    {
+        
+    }
+     public void startupDelete()
+{
+    
+}
+    
     public void fillcomboxStartupID()
     {
          try
@@ -342,6 +355,7 @@ public void userDelete()
         btnManageUsersSubmit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnManageUsersSubmit.setForeground(new java.awt.Color(51, 153, 0));
         btnManageUsersSubmit.setText("SUBMIT");
+        btnManageUsersSubmit.setEnabled(false);
         btnManageUsersSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManageUsersSubmitActionPerformed(evt);
